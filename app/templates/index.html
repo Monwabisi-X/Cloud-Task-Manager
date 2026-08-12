@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cloud Task Manager</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="container">
+    <h1>Cloud Task Manager</h1>
+    <p class="subtitle">Week 1 — Flask + PostgreSQL + Docker</p>
+
+    <form method="post" action="{{ url_for('main.create_task_from_form') }}" class="card">
+      <label for="title">Task title</label>
+      <input id="title" name="title" maxlength="200" required>
+
+      <label for="description">Description</label>
+      <textarea id="description" name="description" rows="3"></textarea>
+
+      <button type="submit">Create task</button>
+    </form>
+
+    <section class="card">
+      <h2>Tasks</h2>
+      {% if tasks %}
+        {% for task in tasks %}
+          <article class="task">
+            <div>
+              <h3>{{ task.title }}</h3>
+              <p>{{ task.description or "No description." }}</p>
+              <small>Status: {{ task.status }}</small>
+            </div>
+          </article>
+        {% endfor %}
+      {% else %}
+        <p>No tasks yet. Create one above.</p>
+      {% endif %}
+    </section>
+
+    <section class="card">
+      <h2>API</h2>
+      <p>GET <code>/api/tasks</code> — list tasks</p>
+      <p>POST <code>/api/tasks</code> — create a task</p>
+      <p>PUT <code>/api/tasks/&lt;id&gt;</code> — update a task</p>
+      <p>DELETE <code>/api/tasks/&lt;id&gt;</code> — delete a task</p>
+      <p>GET <code>/health</code> — health check</p>
+    </section>
+  </main>
+</body>
+</html>
