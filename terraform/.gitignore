@@ -1,0 +1,18 @@
+# Terraform state (contains resource attributes, sometimes secrets in plain text)
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+
+# Local .terraform directories
+**/.terraform/*
+
+# terraform.tfvars is a required project deliverable and, as configured in
+# this project, holds no secrets (db_password is passed via TF_VAR_db_password
+# instead — see the comment in terraform.tfvars). It's intentionally NOT
+# ignored here. If you ever add a real secret to a .tfvars file, ignore that
+# specific file instead of committing it.
+
+# Ignore CLI configuration files
+.terraformrc
+terraform.rc
