@@ -43,12 +43,6 @@ variable "asg_desired_capacity" {
   default     = 2
 }
 
-variable "github_repo_url" {
-  description = "Git URL the EC2 instances clone on boot to pull the application code"
-  type        = string
-  default     = "https://github.com/Monwabisi-X/Cloud-Task-Manager.git"
-}
-
 variable "db_name" {
   description = "Name of the application database"
   type        = string
@@ -80,7 +74,13 @@ variable "db_allocated_storage" {
 }
 
 variable "db_engine_version" {
-  description = "PostgreSQL engine version for RDS"
+  description = "PostgreSQL major engine version for RDS. Left as just the major version (no minor) so AWS auto-selects the latest supported minor version, since specific minor versions get retired from new-instance creation over time."
   type        = string
   default     = "16"
+}
+
+variable "github_repo_url" {
+  description = "Git URL the EC2 instances clone on boot to pull the application code"
+  type        = string
+  default     = "https://github.com/Monwabisi-X/Cloud-Task-Manager.git"
 }

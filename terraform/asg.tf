@@ -82,7 +82,9 @@ resource "aws_launch_template" "app" {
     db_port         = aws_db_instance.main.port
     db_name         = var.db_name
     db_username     = var.db_username
-    db_password     = var.db_password
+    # urlencode() so characters like @ : $ / in the password can't break
+    # the connection-string format, independent of the bash heredoc fix.
+    db_password = urlencode(var.db_password)
   }))
 
   tag_specifications {
