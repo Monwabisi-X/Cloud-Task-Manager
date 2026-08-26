@@ -18,7 +18,7 @@ db_username       = "postgres"
 db_instance_class = "db.t3.micro"
 
 dockerhub_image = "monwabisix/cloud-task-manager"
-github_repo     = "Monwabisi-X/Cloud-Task-Manager"
+github_repo     = "monwabisi-x/cloud-task-manager"
 github_branch   = "main"
 
 # db_password is intentionally NOT set here. This file is version-controlled
