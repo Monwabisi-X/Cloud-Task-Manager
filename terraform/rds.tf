@@ -34,9 +34,9 @@ resource "aws_db_instance" "main" {
 
   # Dev/portfolio settings. For a real production workload, set these
   # to true/appropriate retention and take a final snapshot instead.
-  skip_final_snapshot       = true
-  deletion_protection       = false
-  backup_retention_period   = 1
+  skip_final_snapshot        = true
+  deletion_protection        = false
+  backup_retention_period    = 1
   auto_minor_version_upgrade = true
 
   tags = {

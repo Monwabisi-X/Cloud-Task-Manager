@@ -69,14 +69,14 @@ resource "aws_launch_template" "app" {
     device_name = "/dev/xvda"
     ebs {
       volume_size           = 30
-      volume_type            = "gp3"
-      encrypted              = true
-      delete_on_termination  = true
+      volume_type           = "gp3"
+      encrypted             = true
+      delete_on_termination = true
     }
   }
 
   user_data = base64encode(templatefile("${path.module}/templates/user_data.sh.tpl", {
-    github_repo_url = var.github_repo_url
+    dockerhub_image = var.dockerhub_image
     app_port        = var.app_port
     db_host         = aws_db_instance.main.address
     db_port         = aws_db_instance.main.port
@@ -134,7 +134,7 @@ resource "aws_autoscaling_policy" "scale_up" {
   name                   = "cloud-task-manager-scale-up"
   autoscaling_group_name = aws_autoscaling_group.app.name
   adjustment_type        = "ChangeInCapacity"
-  scaling_adjustment      = 1
+  scaling_adjustment     = 1
   cooldown               = 120
 }
 
@@ -142,6 +142,6 @@ resource "aws_autoscaling_policy" "scale_down" {
   name                   = "cloud-task-manager-scale-down"
   autoscaling_group_name = aws_autoscaling_group.app.name
   adjustment_type        = "ChangeInCapacity"
-  scaling_adjustment      = -1
+  scaling_adjustment     = -1
   cooldown               = 120
 }

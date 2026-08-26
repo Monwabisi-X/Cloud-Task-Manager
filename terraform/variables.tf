@@ -84,3 +84,19 @@ variable "github_repo_url" {
   type        = string
   default     = "https://github.com/Monwabisi-X/Cloud-Task-Manager.git"
 }
+
+variable "dockerhub_image" {
+  description = "Docker Hub image reference the EC2 instances pull, e.g. 'yourdockerhubuser/cloud-task-manager'. Do NOT include a tag; ':latest' is appended in the compose file."
+  type        = string
+}
+
+variable "github_repo" {
+  description = "Your GitHub repo in 'owner/repo' form, used to restrict which repo's GitHub Actions can assume the deployment IAM role via OIDC."
+  type        = string
+}
+
+variable "github_branch" {
+  description = "Branch GitHub Actions is allowed to deploy from"
+  type        = string
+  default     = "main"
+}

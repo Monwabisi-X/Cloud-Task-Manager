@@ -48,6 +48,11 @@ output "app_security_group_id" {
   value       = aws_security_group.app.id
 }
 
+output "github_actions_role_arn" {
+  description = "IAM role ARN GitHub Actions assumes via OIDC. Set this as the AWS_ROLE_ARN secret in your GitHub repo."
+  value       = aws_iam_role.github_actions_deploy.arn
+}
+
 output "db_security_group_id" {
   description = "Security group ID attached to the RDS instance"
   value       = aws_security_group.db.id

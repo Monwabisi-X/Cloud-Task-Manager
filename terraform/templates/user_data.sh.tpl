@@ -2,7 +2,7 @@
 set -euxo pipefail
 
 dnf update -y
-dnf install -y docker git
+dnf install -y docker
 
 systemctl enable docker
 systemctl start docker
@@ -14,21 +14,39 @@ curl -SL "https://github.com/docker/compose/releases/latest/download/docker-comp
   -o /usr/local/lib/docker/cli-plugins/docker-compose
 chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
 
-git clone ${github_repo_url} /opt/cloud-task-manager
+mkdir -p /opt/cloud-task-manager
 cd /opt/cloud-task-manager
 
-# IMPORTANT: the heredoc delimiter below is QUOTED ('ENVFILE', not ENVFILE).
-# That disables bash variable/command expansion inside the heredoc entirely.
+# No git clone, no on-instance build. GitHub Actions builds the image and
+# pushes it to Docker Hub; this instance just pulls the published image.
+#
+# QUOTED heredoc ('COMPOSE') so bash does not touch the DATABASE_URL
+# reference below -- that syntax is meant for docker compose itself to
+# resolve from the .env file at compose-parse time, not for bash to expand
+# at boot time. $${...} here is Terraform's own escape so templatefile()
+# leaves it as a literal $${...} in the rendered output.
+cat > docker-compose.prod.yml <<'COMPOSE'
+services:
+  web:
+    image: ${dockerhub_image}:latest
+    environment:
+      DATABASE_URL: $${DATABASE_URL}
+    ports:
+      - "${app_port}:${app_port}"
+    restart: unless-stopped
+COMPOSE
+
+# IMPORTANT: quoted heredoc delimiter ('ENVFILE', not ENVFILE) for the same
+# reason -- this disables all bash variable/command expansion inside it.
 # Without the quotes, any $ in the DB password gets interpreted as a shell
-# variable at boot time and silently deleted, corrupting DATABASE_URL.
+# variable at boot time and silently deleted, corrupting DATABASE_URL. The
+# password below is also urlencode()'d by Terraform, closing off the same
+# class of bug at the URL-format level too (see project documentation,
+# Section 8.6).
 cat > .env <<'ENVFILE'
 DATABASE_URL=postgresql+psycopg://${db_username}:${db_password}@${db_host}:${db_port}/${db_name}
 ENVFILE
 chmod 600 .env
 
-# Compose v2 defaults to buildx for --build, which isn't installed
-# separately from the compose plugin above. Force the classic build engine.
-export DOCKER_BUILDKIT=0
-export COMPOSE_DOCKER_CLI_BUILD=0
-
-docker compose -f docker-compose.prod.yml up -d --build
+docker compose -f docker-compose.prod.yml pull
+docker compose -f docker-compose.prod.yml up -d

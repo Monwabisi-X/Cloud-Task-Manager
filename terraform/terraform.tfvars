@@ -17,8 +17,10 @@ db_name           = "cloudapp"
 db_username       = "postgres"
 db_instance_class = "db.t3.micro"
 
+dockerhub_image = "monwabisix/cloud-task-manager"
+github_repo     = "Monwabisi-X/Cloud-Task-Manager"
+github_branch   = "main"
+
 # db_password is intentionally NOT set here. This file is version-controlled
-# in spirit (it's example/reference config), so secrets don't belong in it.
-# Set it instead with:
+# It is set instead with:
 #   export TF_VAR_db_password="your-strong-password-here"
-# and Terraform will pick it up automatically at plan/apply time.
