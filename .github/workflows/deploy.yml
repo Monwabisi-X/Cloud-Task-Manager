@@ -51,7 +51,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Debug secret length
-        run: echo "Role ARN length: ${#ROLE_ARN}"
+        run: |
+          echo "Role ARN length: ${#ROLE_ARN}"
         env:
           ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
           
