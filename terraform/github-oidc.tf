@@ -23,7 +23,14 @@ resource "aws_iam_role" "github_actions_deploy" {
             "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
           }
           StringLike = {
-            "token.actions.githubusercontent.com:sub" = "repo:${var.github_repo}:ref:refs/heads/${var.github_branch}"
+            # GitHub permanently switches a repo's OIDC "sub" claim to this
+            # ID-suffixed format once the repo has ever been renamed (even
+            # if renamed back), to prevent trust-policy bypass via renaming.
+            # Confirmed via CloudTrail: owner ID 181324463, repo ID 1330736810.
+            "token.actions.githubusercontent.com:sub" = [
+              "repo:${var.github_repo}:ref:refs/heads/${var.github_branch}",
+              "repo:Monwabisi-X@181324463/Cloud-Task-Manager@1330736810:ref:refs/heads/${var.github_branch}"
+            ]
           }
         }
       }
